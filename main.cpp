@@ -10,6 +10,8 @@ extern FILE *yyin;
 std::vector<std::unordered_map<std::string,double>> ec;
 get_exec_context exec_context(ec);
 std::unordered_map<std::string,func_def> func_table;
+bool GLOBALreturned=false;
+double GLOBALretval=0;
 
 int main(int argc, char **argv) {
   FILE *fp = stdin;
@@ -18,6 +20,5 @@ int main(int argc, char **argv) {
   }
   yyin = fp;
   yyparse();
-  // std::cout << exps.size();
   return 0;
 }

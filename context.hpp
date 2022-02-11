@@ -26,7 +26,7 @@ class get_exec_context{
         ec[i][str] = val;
       }
     }
-    ec[0][str] = val;
+    ec.back()[str] = val;
   }
   double count(string str){
     for(int i=ec.size()-1;i>=0;i--){

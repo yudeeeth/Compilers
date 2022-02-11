@@ -17,6 +17,7 @@ extern "C" int yywrap() { return 1;}
 "ELSE" {  return ELSE;}
 "WHILE" { return WHILE;}
 "PRINT" { return PRINT;}
+"RETURN" { return RETURN;}
 [a-zA-z][a-zA-Z0-9]*   SAVE_STRING; return ID;
 [0-9]+                 NUMB; return NUMBER;
 "(" {return LPAREN;}

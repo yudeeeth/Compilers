@@ -20,9 +20,13 @@
     #define NODE_PARAM 908122
     #define NODE_CALL 909824
     #define NODE_ARGS 8787878
+    #define NODE_RETURN 345345
 
     extern int yylex();
-    void yyerror(const char *s) { printf("ERROR: %s\n", s); }
+    extern int yylineno, yychar;
+    void yyerror(const char *s) { fprintf(stderr,
+"%s: token %d on line %d\n",
+s, yychar, yylineno);}
 %}
 
 
@@ -65,6 +69,7 @@
 %token ELSE
 %token WHILE
 %token PRINT
+%token RETURN
 /* %token RETURN
 %token FUNCTION */
 %type <td> program
@@ -123,6 +128,11 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | ID LPAREN args RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_FUNC,*($1),$3,$6);
           }
+          | RETURN expression SEMICOLON {
+            $$ = new treenode(NODE_RETURN,$2);
+            // cout<<"---->"<<$2->execute()<<endl;
+          }
+          | error SEMICOLON 
           ;
 args      : expression COMMA args {
             $$ = new treenode(NODE_ARGS,$1,$3);

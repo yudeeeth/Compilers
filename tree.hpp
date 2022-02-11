@@ -21,9 +21,12 @@
 #define NODE_PARAM 908122
 #define NODE_CALL 909824
 #define NODE_ARGS 8787878
+#define NODE_RETURN 345345
 
 using namespace std;
 
+extern double GLOBALretval;
+extern bool GLOBALreturned;
 extern get_exec_context exec_context;
 extern unordered_map<string,func_def> func_table;
 class treenode{
@@ -85,10 +88,32 @@ class treenode{
         }
         return sol;
       }
+      
+      void printnodes(){
+        cout<<"type: "<<type<<endl;
+        if(type==NODE_VAL){
+          cout<<"value: "<<value<<endl;
+        }
+        if(first!=NULL){
+          first->printnodes();
+        }
+        if(second!=NULL){
+          second->printnodes();
+        }
+        if(third!=NULL){
+          third->printnodes();
+        }
+      }
 
       int execute(){
         vector<double> argslis;
+        if(GLOBALreturned) {return GLOBALretval;}
         switch(type){
+          case NODE_RETURN: 
+            GLOBALretval = first->execute();
+            GLOBALreturned = true;
+            // cout<<"returning here "<<first->execute()<<endl;
+            break;
           case NODE_STATEMENTS:
             first->execute();
             if(second!=NULL)
@@ -173,7 +198,7 @@ class treenode{
           case NODE_CALL:
             // if(first==NULL){
               // cout<<"tre.hpp 165"<<endl;
-              double retval;
+              GLOBALreturned = false;
               if(first!=NULL){
                 for(auto x:first->list()){
                   argslis.push_back(x);
@@ -192,9 +217,21 @@ class treenode{
                 else{
                   cout << "Error: Function " << symbol << " takes " << varnames.size() << " arguments, but " << argslis.size() << " were given." << endl;
                 }
-                retval = ((treenode*) func_table[symbol].func_def_tree)->execute();
+                cout<<"calling "<<symbol<<"with arguments :"<<endl;
+                for(auto x: argslis){
+                  cout<<x<<" ";
+                }
+                cout<<"stacksize "<<exec_context.ec.size()<<endl;
+                cout<<endl;
+                ((treenode*) func_table[symbol].func_def_tree)->execute();
               }
               exec_context.pop();
+              if(GLOBALreturned){
+                GLOBALreturned = false;
+                return GLOBALretval;
+              }
+              else
+                return 0;
             // }
             break;
           case NODE_FUNC:
