@@ -16,9 +16,13 @@
     #define NODE_COMP 236474
     #define NODE_ID 8902783
     #define NODE_VAL 489392
+    #define NODE_FUNC 908987
+    #define NODE_PARAM 908122
+    #define NODE_CALL 909824
+    #define NODE_ARGS 8787878
 
     extern int yylex();
-    void yyerror(const char *s) { printf("ERROR: %sn", s); }
+    void yyerror(const char *s) { printf("ERROR: %s\n", s); }
 %}
 
 
@@ -48,11 +52,13 @@
 %token GEQ
 
 // missellaneous
+/* %token COMMA */
 %token CLPAREN
 %token CRPAREN
 %token LPAREN
 %token RPAREN
 %token SEMICOLON
+%token COMMA
 
 //keywords
 %token IF
@@ -66,6 +72,8 @@
 %type <td> statements statement
 %type <td> operator
 %type <td> comparison 
+%type <td> args
+%type <td> params
 
 %start program
 
@@ -88,10 +96,33 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | WHILE LPAREN expression RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_WHILE,$3,$6);
           }
+          | PRINT LPAREN ID expression RPAREN SEMICOLON {
+            $$ = new treenode(NODE_PRINT,*($3), $4);
+          }
           | PRINT LPAREN expression RPAREN SEMICOLON {
-            $$ = new treenode(NODE_PRINT,$3);
+            $$ = new treenode(NODE_PRINT, $3);
+          }
+          | ID LPAREN RPAREN CLPAREN statements CRPAREN {
+            $$ = new treenode(NODE_FUNC,*($1),NULL,$5);
+          }
+          | ID LPAREN args RPAREN CLPAREN statements CRPAREN {
+            $$ = new treenode(NODE_FUNC,*($1),$3,$6);
           }
           ;
+args      : expression COMMA args {
+            $$ = new treenode(NODE_ARGS,$1,$3);
+          }
+          |  expression { 
+            $$ = new treenode(NODE_ARGS,$1);
+          }
+          ;
+params   : ID COMMA params {
+            $$ = new treenode(NODE_PARAM,*($1),$3);
+          }
+          | ID {
+            $$ = new treenode(NODE_PARAM,*($1));
+          }
+          ; 
 expression : expression operator expression { 
               $$ = new treenode(NODE_OPER,$1,$2,$3);
  }
@@ -101,7 +132,13 @@ expression : expression operator expression {
            | LPAREN expression RPAREN { $$ = new treenode(NODE_EXPR, $2); }
            | ID { $$ = new treenode(NODE_ID,(string) *($1)); }
            | NUMBER { $$ = new treenode(NODE_VAL,$1); }
-           ;
+          | ID LPAREN RPAREN{
+            $$ = new treenode(NODE_CALL,*($1),NULL);
+          }
+          | ID LPAREN args RPAREN{
+            $$ = new treenode(NODE_CALL,*($1),$3);
+          }
+          ;
 comparison: EQ {$$ = new treenode  (NODE_COMP,(string)"==");}
           | NEQ {$$ = new treenode (NODE_COMP,(string)"!=");}
           | LT {$$ = new treenode  (NODE_COMP,(string)"<" );}

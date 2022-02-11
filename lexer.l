@@ -12,6 +12,7 @@ extern "C" int yywrap() { return 1;}
 %%
 
 [ \t\n]                 ;
+"//".*\n               ;
 "IF" { return IF;}
 "ELSE" {  return ELSE;}
 "WHILE" { return WHILE;}
@@ -34,4 +35,5 @@ extern "C" int yywrap() { return 1;}
 ">" { return GT;}
 "<=" { return LEQ;}
 ">=" { return GEQ;}
+"," { return COMMA;}
 %%
