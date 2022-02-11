@@ -49,6 +49,7 @@ s, yychar, yylineno);}
 %token MINUS
 %token TIMES
 %token DIVIDE
+%token MOD
 %token ASSIGN
 %token NEQ
 %token EQ
@@ -181,5 +182,6 @@ operator: PLUS { $$ = new treenode (NODE_OPER,(string)"+" );}
         | MINUS { $$ = new treenode(NODE_OPER,(string)"-" );}
         | TIMES { $$ = new treenode(NODE_OPER,(string)"*" );}
         | DIVIDE {$$ = new treenode(NODE_OPER,(string)"/" );}
+        | MOD {$$ = new treenode(NODE_OPER,(string)"%" );}
         ;
 %%

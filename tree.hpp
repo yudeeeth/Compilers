@@ -179,6 +179,9 @@ class treenode{
             else if (second->symbol=="/"){
               return first->execute() / third->execute();
             }
+            else if (second->symbol=="%"){
+              return first->execute() % third->execute();
+            }
             break;
           case NODE_COMP:
             if(second->symbol=="=="){
