@@ -1,5 +1,6 @@
 %{
 #include <string>
+#include <iostream>
 #include "tree.hpp"
 #include "parser.hpp"
 
@@ -18,6 +19,8 @@ extern "C" int yywrap() { return 1;}
 "WHILE" { return WHILE;}
 "PRINT" { return PRINT;}
 "RETURN" { return RETURN;}
+"IN" {return IN;}
+"\"".*"\"" { SAVE_STRING; return STRING;}
 [a-zA-z][a-zA-Z0-9]*   SAVE_STRING; return ID;
 [0-9]+                 NUMB; return NUMBER;
 "(" {return LPAREN;}

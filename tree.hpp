@@ -22,6 +22,7 @@
 #define NODE_CALL 909824
 #define NODE_ARGS 8787878
 #define NODE_RETURN 345345
+#define NODE_IN 201902
 
 using namespace std;
 
@@ -107,12 +108,19 @@ class treenode{
 
       int execute(){
         vector<double> argslis;
+        double inpstr;
         if(GLOBALreturned) {return GLOBALretval;}
         switch(type){
           case NODE_RETURN: 
             GLOBALretval = first->execute();
             GLOBALreturned = true;
             // cout<<"returning here "<<first->execute()<<endl;
+            break;
+          case NODE_IN:
+            cin>>inpstr;
+            if(exec_context.count(symbol)!=0)
+              exec_context.set(symbol, inpstr);
+            return exec_context.get(symbol);
             break;
           case NODE_STATEMENTS:
             first->execute();
@@ -148,10 +156,14 @@ class treenode{
             return first->execute();
             break;
           case NODE_PRINT:
-          if(symbol.empty())
-            cout << first->execute() << endl;
+          // cout<<"printing"<<endl;
+          if(first!=NULL)
+            cout << first->execute();
           else {
-            cout << symbol <<":"<< first->execute() << endl; 
+            if(symbol.size()!=2)
+              cout << symbol.substr(1,symbol.length()-2); 
+            else
+              cout<<endl;
           }
             break;
           case NODE_OPER:

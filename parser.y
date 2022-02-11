@@ -21,6 +21,7 @@
     #define NODE_CALL 909824
     #define NODE_ARGS 8787878
     #define NODE_RETURN 345345
+    #define NODE_IN 201902
 
     extern int yylex();
     extern int yylineno, yychar;
@@ -42,6 +43,7 @@ s, yychar, yylineno);}
 %token <number> NUMBER
 // identifier
 %token <id> ID
+%token <id> STRING
 // operators
 %token PLUS
 %token MINUS
@@ -70,6 +72,7 @@ s, yychar, yylineno);}
 %token WHILE
 %token PRINT
 %token RETURN
+%token IN
 /* %token RETURN
 %token FUNCTION */
 %type <td> program
@@ -116,8 +119,8 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | WHILE LPAREN expression RPAREN statement {
             $$ = new treenode(NODE_WHILE,$3,$5);
           }
-          | PRINT LPAREN ID COMMA expression RPAREN SEMICOLON {
-            $$ = new treenode(NODE_PRINT,*($3), $5);
+          | PRINT LPAREN STRING RPAREN SEMICOLON {
+            $$ = new treenode(NODE_PRINT,*($3));
           }
           | PRINT LPAREN expression RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT, $3);
@@ -131,6 +134,9 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | RETURN expression SEMICOLON {
             $$ = new treenode(NODE_RETURN,$2);
             // cout<<"---->"<<$2->execute()<<endl;
+          }
+          | IN LPAREN ID RPAREN SEMICOLON {
+            $$ = new treenode(NODE_IN,*($3));
           }
           | error SEMICOLON 
           ;
