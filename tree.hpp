@@ -127,7 +127,7 @@ class treenode{
           if(symbol.empty())
             cout << first->execute() << endl;
           else {
-            cout <<  
+            cout << symbol <<":"<< first->execute() << endl; 
           }
             break;
           case NODE_OPER:

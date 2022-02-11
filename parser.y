@@ -96,8 +96,8 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | WHILE LPAREN expression RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_WHILE,$3,$6);
           }
-          | PRINT LPAREN ID expression RPAREN SEMICOLON {
-            $$ = new treenode(NODE_PRINT,*($3), $4);
+          | PRINT LPAREN ID COMMA expression RPAREN SEMICOLON {
+            $$ = new treenode(NODE_PRINT,*($3), $5);
           }
           | PRINT LPAREN expression RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT, $3);
