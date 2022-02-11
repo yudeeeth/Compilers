@@ -90,11 +90,26 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | IF LPAREN expression RPAREN CLPAREN statements CRPAREN ELSE CLPAREN statements CRPAREN { 
             $$ = new treenode(NODE_IFELSE,$3,$6,$10);
           }
+          | IF LPAREN expression RPAREN CLPAREN statements CRPAREN ELSE statement { 
+            $$ = new treenode(NODE_IFELSE,$3,$6,$9);
+          }
+          | IF LPAREN expression RPAREN statement ELSE statement { 
+            $$ = new treenode(NODE_IFELSE,$3,$5,$7);
+          }
+          | IF LPAREN expression RPAREN statement ELSE CLPAREN statements CRPAREN { 
+            $$ = new treenode(NODE_IFELSE,$3,$5,$8);
+          }
           | IF LPAREN expression RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_IF,$3,$6);
           }
+          | IF LPAREN expression RPAREN statement {
+            $$ = new treenode(NODE_IF,$3,$5);
+          }
           | WHILE LPAREN expression RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_WHILE,$3,$6);
+          }
+          | WHILE LPAREN expression RPAREN statement {
+            $$ = new treenode(NODE_WHILE,$3,$5);
           }
           | PRINT LPAREN ID COMMA expression RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT,*($3), $5);
