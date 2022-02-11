@@ -1,0 +1,32 @@
+// Prime Number Program
+
+isprime(n){
+    i;
+    i=2;
+    WHILE(i<n){
+        IF((n%i)==0){
+            RETURN 0;
+        }
+        i=i+1;
+    }
+    RETURN 1;
+}
+
+main(){
+    n;
+    i;
+    PRINT("");
+    IN(n);
+    n=100;
+    i=2;
+    WHILE(i<=n){
+        IF(isprime(i)==1)
+            {
+                PRINT(i); 
+                PRINT(" ");
+            }
+        i=i+1;
+    }
+}
+
+main();
