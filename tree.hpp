@@ -142,8 +142,7 @@ class treenode{
             return exec_context.get(symbol);
             break;
           case NODE_DECLARE:
-            if(exec_context.count(symbol)==0)
-              exec_context.set(symbol,0);
+              exec_context.def(symbol,0);
             break;
           case NODE_EXPR:
             return first->execute();
@@ -205,33 +204,39 @@ class treenode{
                 }
               }
               // cout<<"tre.hpp 172"<<endl;
+              // cout<<"stack added"<<endl;
               exec_context.push();
               // cout<<"tre.hpp 175"<<endl;
               if(func_table.count(symbol)!=0){
                 vector<string> varnames = func_table[symbol].args_list;
+                
                 if(varnames.size()==argslis.size()){
                   for(int i=0;i<varnames.size();i++){
-                    exec_context.set(varnames[i],argslis[i]);
+                    // cout<<"adding arguments"<<endl;
+                    exec_context.def(varnames[i],argslis[i]);
                   }
                 }
                 else{
                   cout << "Error: Function " << symbol << " takes " << varnames.size() << " arguments, but " << argslis.size() << " were given." << endl;
                 }
-                cout<<"calling "<<symbol<<"with arguments :"<<endl;
-                for(auto x: argslis){
-                  cout<<x<<" ";
-                }
-                cout<<"stacksize "<<exec_context.ec.size()<<endl;
-                cout<<endl;
+                // cout<<"calling "<<symbol<<"with arguments :"<<endl;
+                // for(auto x: argslis){
+                //   cout<<x<<" ";
+                // }
+                // cout<<"stacksize "<<exec_context.ec.size()<<endl;
+                // cout<<endl;
                 ((treenode*) func_table[symbol].func_def_tree)->execute();
               }
               exec_context.pop();
               if(GLOBALreturned){
+                // cout<<"stack removed with value "<<GLOBALretval<<endl;
                 GLOBALreturned = false;
                 return GLOBALretval;
               }
-              else
+              else{
+                // cout<<"stack removed"<<endl;
                 return 0;
+              }
             // }
             break;
           case NODE_FUNC:

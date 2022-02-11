@@ -20,10 +20,14 @@ class get_exec_context{
     }
     return 0;
   }
+  void def(string str, double val){
+    ec.back()[str] = val;
+  }
   void set(string str, double val){
     for(int i=ec.size()-1;i>=0;i--){
       if(ec[i].count(str)!=0){
         ec[i][str] = val;
+        return;
       }
     }
     ec.back()[str] = val;
