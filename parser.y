@@ -22,6 +22,7 @@
     #define NODE_ARGS 8787878
     #define NODE_RETURN 345345
     #define NODE_IN 201902
+    #define NODE_FOR 3453245
 
     extern int yylex();
     extern int yylineno, yychar;
@@ -73,6 +74,7 @@ s, yychar, yylineno);}
 %token WHILE
 %token PRINT
 %token RETURN
+%token FOR
 %token IN
 /* %token RETURN
 %token FUNCTION */
@@ -119,6 +121,9 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           }
           | WHILE LPAREN expression RPAREN statement {
             $$ = new treenode(NODE_WHILE,$3,$5);
+          }
+          | FOR LPAREN statement statement statement RPAREN CLPAREN statements CRPAREN {
+            $$ = new treenode(NODE_FOR,$3,$4,$5,$8);
           }
           | PRINT LPAREN STRING RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT,*($3));

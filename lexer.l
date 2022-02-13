@@ -17,6 +17,7 @@ extern "C" int yywrap() { return 1;}
 "IF" { return IF;}
 "ELSE" {  return ELSE;}
 "WHILE" { return WHILE;}
+"FOR" { return FOR;}
 "PRINT" { return PRINT;}
 "RETURN" { return RETURN;}
 "IN" {return IN;}

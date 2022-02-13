@@ -23,6 +23,7 @@
 #define NODE_ARGS 8787878
 #define NODE_RETURN 345345
 #define NODE_IN 201902
+#define NODE_FOR 3453245
 
 using namespace std;
 
@@ -32,21 +33,23 @@ extern get_exec_context exec_context;
 extern unordered_map<string,func_def> func_table;
 class treenode{
   public:
-      treenode *first,*second,*third;
+      treenode *first,*second,*third,*fourth;
       int type;
       double value;
       string symbol;
-      treenode(int code, treenode * _first=NULL, treenode* _second =NULL, treenode * _third=NULL){
-        type = code;
-        first = _first;
-        second = _second;
-        third = _third;
+      treenode(int code, treenode * _first=NULL, treenode* _second =NULL, treenode * _third=NULL, treenode* _fourth=NULL){
+          type = code;
+          first = _first;
+          second = _second;
+          third = _third;
+          fourth = _fourth;
       }
       treenode(int code, string _symbol, treenode* _first = NULL,treenode* _second = NULL){
         type = code;
         symbol = _symbol;
         first = _first;
         second = _second;
+        fourth = NULL;
       }
       treenode(int code, double val){
         type = code;
@@ -54,6 +57,7 @@ class treenode{
         first = NULL;
         second = NULL;
         third = NULL;
+        fourth = NULL;
       }
 
       void helperlist(vector<double> & li){
@@ -111,6 +115,13 @@ class treenode{
         double inpstr;
         if(GLOBALreturned) {return GLOBALretval;}
         switch(type){
+          case NODE_FOR:
+            first->execute();
+            while(second->execute()){
+              fourth->execute();
+              third->execute();
+            }
+            break;
           case NODE_RETURN: 
             GLOBALretval = first->execute();
             GLOBALreturned = true;
