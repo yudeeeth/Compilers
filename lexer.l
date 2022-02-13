@@ -24,12 +24,14 @@ extern "C" int yywrap() { return 1;}
 "CONTINUE" {return CONTINUE;}
 "IN" {return IN;}
 "\"".*"\"" { SAVE_STRING; return STRING;}
-[a-zA-z][a-zA-Z0-9]*   SAVE_STRING; return ID;
+[a-zA-Z][a-zA-Z0-9]*   { SAVE_STRING; return ID; }
 [0-9]+                 NUMB; return NUMBER;
 "(" {return LPAREN;}
 ")" {return RPAREN;}
 "{" {return CLPAREN;}
 "}" { return CRPAREN;}
+"[" { return SLPAREN;}
+"]" { return SRPAREN;}
 ";" { return SEMICOLON;}
 "++" { return INC;}
 "--" { return DEC;}

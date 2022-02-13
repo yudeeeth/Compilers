@@ -184,12 +184,23 @@ class treenode{
           enteredLoop--;
             break;
           case NODE_ASSIGN:
-            if(exec_context.count(symbol)!=0)
-              exec_context.set(symbol, first->execute());
-            return exec_context.get(symbol);
+            if(second==NULL){
+              if(exec_context.count(symbol)!=0)
+                exec_context.set(symbol, first->execute());
+              return exec_context.get(symbol);
+            }
+            else{
+              int index = second->execute();
+              if(exec_context.vcount(symbol)!=0)
+                exec_context.set(symbol, first->execute(), index);
+              return exec_context.get(symbol, index);
+            }
             break;
           case NODE_DECLARE:
+              if(first==NULL)
               exec_context.def(symbol,0);
+              else
+              exec_context.def(symbol,0,first->execute());
             break;
           case NODE_EXPR:
             return first->execute();
@@ -253,7 +264,10 @@ class treenode{
             }
             break;
           case NODE_ID:
+          if(first==NULL)
             return exec_context.get(symbol);
+          else
+            return exec_context.get(symbol, first->execute());
             break;
           case NODE_VAL:
             return value;
@@ -319,6 +333,4 @@ class treenode{
             break;
         }
       }
-
-
     };

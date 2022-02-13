@@ -48,6 +48,8 @@ s, yychar, yylineno);}
 %token CRPAREN
 %token LPAREN
 %token RPAREN
+%token SLPAREN
+%token SRPAREN
 %token SEMICOLON
 %token COMMA
 
@@ -82,7 +84,9 @@ statements : statement statements {$$ = new treenode(NODE_STATEMENTS,$1,$2);}
             | statement { $$ = new treenode(NODE_STATEMENTS,$1); }
             ;
 statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
+          | ID SLPAREN expression SRPAREN SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1), $3); }
           | ID ASSIGN expression SEMICOLON { $$ = new treenode(NODE_ASSIGN,*($1),$3); }
+          | ID SLPAREN expression SRPAREN ASSIGN expression SEMICOLON { $$ = new treenode(NODE_ASSIGN,*($1),$6,$3); }
           | expression SEMICOLON { $$ = new treenode(NODE_EXPR,$1); }
           | IF LPAREN expression RPAREN CLPAREN statements CRPAREN ELSE CLPAREN statements CRPAREN { 
             $$ = new treenode(NODE_IFELSE,$3,$6,$10);
@@ -136,7 +140,6 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           | CONTINUE SEMICOLON {
             $$ = new treenode(NODE_CONTINUE);
           }
-          | error SEMICOLON 
           ;
 args      : expression COMMA args {
             $$ = new treenode(NODE_ARGS,$1,$3);
@@ -157,6 +160,9 @@ expression : expression operator expression {
  }
            | expression comparison expression {
               $$ = new treenode(NODE_COMP,$1,$2,$3);
+           }
+           | ID SLPAREN expression SRPAREN {
+              $$ = new treenode(NODE_ID,*($1),$3);
            }
            | ID unary {
               $$ = new treenode(NODE_OPER,*($1),$2);
