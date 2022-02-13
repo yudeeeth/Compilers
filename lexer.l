@@ -31,6 +31,8 @@ extern "C" int yywrap() { return 1;}
 "{" {return CLPAREN;}
 "}" { return CRPAREN;}
 ";" { return SEMICOLON;}
+"++" { return INC;}
+"--" { return DEC;}
 "+" { return PLUS;}
 "%" { return MOD;}
 "-" { return MINUS;}

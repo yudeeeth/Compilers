@@ -206,7 +206,17 @@ class treenode{
           }
             break;
           case NODE_OPER:
-            if(second->symbol=="+"){
+            if(first->symbol=="++"){
+              if(exec_context.count(symbol)!=0)
+                exec_context.set(symbol, exec_context.get(symbol)+1);
+              return exec_context.get(symbol);
+            }
+            else if(first->symbol=="--"){
+              if(exec_context.count(symbol)!=0)
+                exec_context.set(symbol, exec_context.get(symbol)-1);
+              return exec_context.get(symbol);
+            }
+            else if(second->symbol=="+"){
               return first->execute() + third->execute();
             }
             else if (second->symbol=="-"){

@@ -15,9 +15,9 @@ isprime(n){
 main(){
     n;
     i;
+    PRINT("Enter a number: ");
     PRINT("");
     IN(n);
-    n=100;
     i=2;
     WHILE(i<=n){
         IF(isprime(i)==1)

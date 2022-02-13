@@ -32,6 +32,9 @@ s, yychar, yylineno);}
 %token DIVIDE
 %token MOD
 %token ASSIGN
+%token INC
+%token DEC
+
 %token NEQ
 %token EQ
 %token LT
@@ -67,6 +70,7 @@ s, yychar, yylineno);}
 %type <td> comparison 
 %type <td> args
 %type <td> params
+%type <td> unary
 
 %start program
 
@@ -154,6 +158,9 @@ expression : expression operator expression {
            | expression comparison expression {
               $$ = new treenode(NODE_COMP,$1,$2,$3);
            }
+           | ID unary {
+              $$ = new treenode(NODE_OPER,*($1),$2);
+           }
            | LPAREN expression RPAREN { $$ = new treenode(NODE_EXPR, $2); }
            | ID { $$ = new treenode(NODE_ID,(string) *($1)); }
            | NUMBER { $$ = new treenode(NODE_VAL,$1); }
@@ -176,5 +183,8 @@ operator: PLUS { $$ = new treenode (NODE_OPER,(string)"+" );}
         | TIMES { $$ = new treenode(NODE_OPER,(string)"*" );}
         | DIVIDE {$$ = new treenode(NODE_OPER,(string)"/" );}
         | MOD {$$ = new treenode(NODE_OPER,(string)"%" );}
+        ;
+unary   : INC { $$ = new treenode(NODE_OPER,(string)"++");}
+        | DEC { $$ = new treenode(NODE_OPER,(string)"--");}
         ;
 %%
