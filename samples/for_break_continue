@@ -1,0 +1,10 @@
+x;
+FOR(x=1;x<30;x++;){
+    IF(x==15) BREAK;
+    IF((x%2)==0){
+        CONTINUE;
+    }
+    PRINT(x);
+    PRINT(" ");
+    PRINT("");
+}
