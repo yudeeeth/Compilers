@@ -20,6 +20,8 @@ extern "C" int yywrap() { return 1;}
 "FOR" { return FOR;}
 "PRINT" { return PRINT;}
 "RETURN" { return RETURN;}
+"BREAK" {return BREAK;}
+"CONTINUE" {return CONTINUE;}
 "IN" {return IN;}
 "\"".*"\"" { SAVE_STRING; return STRING;}
 [a-zA-z][a-zA-Z0-9]*   SAVE_STRING; return ID;

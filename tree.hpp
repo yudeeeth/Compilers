@@ -24,11 +24,16 @@
 #define NODE_RETURN 345345
 #define NODE_IN 201902
 #define NODE_FOR 3453245
+#define NODE_BREAK 999999
+#define NODE_CONTINUE 999988
 
 using namespace std;
 
 extern double GLOBALretval;
 extern bool GLOBALreturned;
+extern bool breakSet;
+extern bool continueSet;
+extern int enteredLoop;
 extern get_exec_context exec_context;
 extern unordered_map<string,func_def> func_table;
 class treenode{
@@ -114,13 +119,29 @@ class treenode{
         vector<double> argslis;
         double inpstr;
         if(GLOBALreturned) {return GLOBALretval;}
+        if(enteredLoop>0 && ( breakSet || continueSet )){
+          return 0;
+        }
         switch(type){
+          case NODE_CONTINUE:
+            continueSet = true;
+            break;
+          case NODE_BREAK:
+            breakSet = true;
+            break;
           case NODE_FOR:
+          enteredLoop++;
             first->execute();
             while(second->execute()){
               fourth->execute();
+              if(breakSet){
+                breakSet = false;
+                break;
+              }
+              continueSet = false;
               third->execute();
             }
+          enteredLoop--;
             break;
           case NODE_RETURN: 
             GLOBALretval = first->execute();
@@ -151,9 +172,16 @@ class treenode{
             }
             break;
           case NODE_WHILE:
+          enteredLoop++;
             while((int)first->execute()){
               second->execute();
+              if(breakSet){
+                breakSet = false;
+                break;
+              }
+              continueSet = false;
             }
+          enteredLoop--;
             break;
           case NODE_ASSIGN:
             if(exec_context.count(symbol)!=0)

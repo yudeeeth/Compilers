@@ -13,6 +13,10 @@ std::unordered_map<std::string,func_def> func_table;
 bool GLOBALreturned=false;
 double GLOBALretval=0;
 
+int enteredLoop = 0;
+bool breakSet = false;
+bool continueSet = false;
+
 int main(int argc, char **argv) {
   FILE *fp = stdin;
   if (argc >= 2) {

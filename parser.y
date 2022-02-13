@@ -4,26 +4,6 @@
     #include <vector>
     #include <unordered_map>
 
-    #define NODE_STATEMENTS 2356534
-    #define NODE_IF 572456
-    #define NODE_IFELSE 574655
-    #define NODE_WHILE 573346
-    #define NODE_ASSIGN 345645
-    #define NODE_DECLARE 345765
-    #define NODE_EXPR 235655
-    #define NODE_PRINT 345745
-    #define NODE_OPER 736423
-    #define NODE_COMP 236474
-    #define NODE_ID 8902783
-    #define NODE_VAL 489392
-    #define NODE_FUNC 908987
-    #define NODE_PARAM 908122
-    #define NODE_CALL 909824
-    #define NODE_ARGS 8787878
-    #define NODE_RETURN 345345
-    #define NODE_IN 201902
-    #define NODE_FOR 3453245
-
     extern int yylex();
     extern int yylineno, yychar;
     void yyerror(const char *s) { fprintf(stderr,
@@ -76,6 +56,8 @@ s, yychar, yylineno);}
 %token RETURN
 %token FOR
 %token IN
+%token BREAK
+%token CONTINUE
 /* %token RETURN
 %token FUNCTION */
 %type <td> program
@@ -143,6 +125,12 @@ statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
           }
           | IN LPAREN ID RPAREN SEMICOLON {
             $$ = new treenode(NODE_IN,*($3));
+          }
+          | BREAK SEMICOLON {
+            $$ = new treenode(NODE_BREAK);
+          }
+          | CONTINUE SEMICOLON {
+            $$ = new treenode(NODE_CONTINUE);
           }
           | error SEMICOLON 
           ;
