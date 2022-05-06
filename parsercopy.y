@@ -42,7 +42,7 @@ s, yychar, yylineno);}
 %token LEQ
 %token GEQ
 
-// miscellaneous
+// missellaneous
 /* %token COMMA */
 %token CLPAREN
 %token CRPAREN
@@ -50,24 +50,19 @@ s, yychar, yylineno);}
 %token RPAREN
 %token SLPAREN
 %token SRPAREN
-%token SLASHN
+%token SEMICOLON
 %token COMMA
 
 //keywords
 %token IF
 %token ELSE
 %token WHILE
-%token VECHUKO
+%token PRINT
 %token RETURN
 %token FOR
 %token IN
 %token BREAK
 %token CONTINUE
-%token SOLRAN
-%token SEIRAN
-%token NA
-%token VAATI_SONNA
-%token SONNA_MAARI
 /* %token RETURN
 %token FUNCTION */
 %type <td> program
@@ -83,18 +78,19 @@ s, yychar, yylineno);}
 
 %%
 program : statements { treenode * toplevel = new treenode(NODE_STATEMENTS,$1);
-                    toplevel->compile(unordered_set<string>());
-                    // cout<<"interpreter starts from here:"<<endl;
+                    // cout<<"interpreter"<<endl;
                     // toplevel->execute();
+                    // cout<<"compiler out"<<endl;
+                    toplevel->compile();
                     };
 statements : statement statements {$$ = new treenode(NODE_STATEMENTS,$1,$2);}
             | statement { $$ = new treenode(NODE_STATEMENTS,$1); }
             ;
-statement : ID SLASHN { $$ = new treenode(NODE_DECLARE, *($1)); }
-          | ID SLPAREN expression SRPAREN SLASHN { $$ = new treenode(NODE_DECLARE, *($1), $3); }
-          | expression SOLRAN ID SEIRAN SLASHN { $$ = new treenode(NODE_ASSIGN,*($3),$1); }
-          | ID SLPAREN expression SRPAREN ASSIGN expression SLASHN { $$ = new treenode(NODE_ASSIGN,*($1),$6,$3); }
-          | expression SLASHN { $$ = new treenode(NODE_EXPR,$1); }
+statement : ID SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1)); }
+          | ID SLPAREN expression SRPAREN SEMICOLON { $$ = new treenode(NODE_DECLARE, *($1), $3); }
+          | ID ASSIGN expression SEMICOLON { $$ = new treenode(NODE_ASSIGN,*($1),$3); }
+          | ID SLPAREN expression SRPAREN ASSIGN expression SEMICOLON { $$ = new treenode(NODE_ASSIGN,*($1),$6,$3); }
+          | expression SEMICOLON { $$ = new treenode(NODE_EXPR,$1); }
           | IF LPAREN expression RPAREN CLPAREN statements CRPAREN ELSE CLPAREN statements CRPAREN { 
             $$ = new treenode(NODE_IFELSE,$3,$6,$10);
           }
@@ -119,13 +115,13 @@ statement : ID SLASHN { $$ = new treenode(NODE_DECLARE, *($1)); }
           | WHILE LPAREN expression RPAREN statement {
             $$ = new treenode(NODE_WHILE,$3,$5);
           }
-          | NA LPAREN statement RPAREN VAATI_SONNA LPAREN statement RPAREN SONNA_MAARI LPAREN statement RPAREN CLPAREN statements CRPAREN {
-            $$ = new treenode(NODE_FOR,$3,$7,$11,$14);
+          | FOR LPAREN statement statement statement RPAREN CLPAREN statements CRPAREN {
+            $$ = new treenode(NODE_FOR,$3,$4,$5,$8);
           }
-          | VECHUKO LPAREN STRING RPAREN SLASHN {
+          | PRINT LPAREN STRING RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT,*($3));
           }
-          | VECHUKO LPAREN expression RPAREN SLASHN {
+          | PRINT LPAREN expression RPAREN SEMICOLON {
             $$ = new treenode(NODE_PRINT, $3);
           }
           | ID LPAREN RPAREN CLPAREN statements CRPAREN {
@@ -134,17 +130,17 @@ statement : ID SLASHN { $$ = new treenode(NODE_DECLARE, *($1)); }
           | ID LPAREN args RPAREN CLPAREN statements CRPAREN {
             $$ = new treenode(NODE_FUNC,*($1),$3,$6);
           }
-          | RETURN expression SLASHN {
+          | RETURN expression SEMICOLON {
             $$ = new treenode(NODE_RETURN,$2);
             // cout<<"---->"<<$2->execute()<<endl;
           }
-          | IN LPAREN ID RPAREN SLASHN {
+          | IN LPAREN ID RPAREN SEMICOLON {
             $$ = new treenode(NODE_IN,*($3));
           }
-          | BREAK SLASHN {
+          | BREAK SEMICOLON {
             $$ = new treenode(NODE_BREAK);
           }
-          | CONTINUE SLASHN {
+          | CONTINUE SEMICOLON {
             $$ = new treenode(NODE_CONTINUE);
           }
           ;
@@ -164,7 +160,7 @@ params   : ID COMMA params {
           ; 
 expression : expression operator expression { 
               $$ = new treenode(NODE_OPER,$1,$2,$3);
-           }
+ }
            | expression comparison expression {
               $$ = new treenode(NODE_COMP,$1,$2,$3);
            }

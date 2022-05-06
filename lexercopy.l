@@ -12,25 +12,19 @@ extern "C" int yywrap() { return 1;}
 
 %%
 
-[\t \n]                    ;
-":"  {return SLASHN;}
+[ \t\n]                 ;
 "//".*\n               ;
-"ORUVELA" { return IF;}
-"ILLENA" {  return ELSE;}
+"IF" { return IF;}
+"ELSE" {  return ELSE;}
 "WHILE" { return WHILE;}
 "FOR" { return FOR;}
-"VECHUKO" { return VECHUKO; }
-"SOLRAN" { return SOLRAN; }
-"SEIRAN" { return SEIRAN; }
-"NA" { return NA; }
-"VAATI SONNA" { return VAATI_SONNA; }
-"VAATI SONNA MAARI" { return SONNA_MAARI; }
-"ITHU EPDI IRUKU" { return RETURN;}
+"PRINT" { return PRINT;}
+"RETURN" { return RETURN;}
 "BREAK" {return BREAK;}
 "CONTINUE" {return CONTINUE;}
 "IN" {return IN;}
 "\"".*"\"" { SAVE_STRING; return STRING;}
-KANNA_[a-zA-Z][a-zA-Z0-9]*   { SAVE_STRING; return ID; }
+[a-zA-Z][a-zA-Z0-9]*   { SAVE_STRING; return ID; }
 [0-9]+                 NUMB; return NUMBER;
 "(" {return LPAREN;}
 ")" {return RPAREN;}
@@ -38,6 +32,7 @@ KANNA_[a-zA-Z][a-zA-Z0-9]*   { SAVE_STRING; return ID; }
 "}" { return CRPAREN;}
 "[" { return SLPAREN;}
 "]" { return SRPAREN;}
+";" { return SEMICOLON;}
 "++" { return INC;}
 "--" { return DEC;}
 "+" { return PLUS;}

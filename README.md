@@ -75,3 +75,17 @@ Use [x86 reference](https://www.felixcloutier.com/x86/) as reference later.
 ### basic assembly program
  - write assembly code for fibonacci sequence
 
+
+# Agenda for 9 April 2022
+
+<!-- ## #1 General Understanding of the code.
+## #2 Understanding why own parse tree is required.
+## #3 Ways to implement the tree and how its done here. -->
+
+## #1 Understand the code.
+## #2 Change it to Rajinican.
+## #3 LALR,SLR,LR parsing done in js.
+## Change interpreter to js. Not as powerful as lex and yacc but should work???? but onli after LR implementation.
+
+
+

@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <unordered_set>
 #include "context.hpp"
 #include "tree.hpp"
 extern int yyparse();
@@ -17,8 +16,6 @@ double GLOBALretval=0;
 int enteredLoop = 0;
 bool breakSet = false;
 bool continueSet = false;
-int labelcount=0;
-unordered_set<string> decl;
 
 int main(int argc, char **argv) {
   FILE *fp = stdin;

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 #include "context.hpp"
 #include "funcdef.hpp"
@@ -35,16 +34,10 @@ extern bool GLOBALreturned;
 extern bool breakSet;
 extern bool continueSet;
 extern int enteredLoop;
-extern int labelcount;
-extern unordered_set<string> decl;
 extern get_exec_context exec_context;
 extern unordered_map<string,func_def> func_table;
 class treenode{
   public:
-      string getlabel(){
-        labelcount++;
-        return "label"+to_string(labelcount);
-      }
       treenode *first,*second,*third,*fourth;
       int type;
       double value;
@@ -97,9 +90,9 @@ class treenode{
 
       vector<string> plist(){
         vector<string> sol;
-        // cout<<"\tplist"<<endl;
+        // cout<<"plist"<<endl;
         sol.push_back(first->symbol);
-        // cout<<"\tfirst->first->symbol"<<endl;
+        // cout<<"first->first->symbol"<<endl;
         if(second!=NULL){
           second->helperplist(sol);
         }
@@ -107,9 +100,9 @@ class treenode{
       }
       
       void printnodes(){
-        cout<<"\ttype: "<<type<<endl;
+        cout<<"type: "<<type<<endl;
         if(type==NODE_VAL){
-          cout<<"\tvalue: "<<value<<endl;
+          cout<<"value: "<<value<<endl;
         }
         if(first!=NULL){
           first->printnodes();
@@ -153,7 +146,7 @@ class treenode{
           case NODE_RETURN: 
             GLOBALretval = first->execute();
             GLOBALreturned = true;
-            // cout<<"\treturning here "<<first->execute()<<endl;
+            // cout<<"returning here "<<first->execute()<<endl;
             break;
           case NODE_IN:
             cin>>inpstr;
@@ -213,7 +206,7 @@ class treenode{
             return first->execute();
             break;
           case NODE_PRINT:
-          // cout<<"\tprinting"<<endl;
+          // cout<<"printing"<<endl;
           if(first!=NULL)
             cout << first->execute();
           else {
@@ -281,45 +274,45 @@ class treenode{
             break;
           case NODE_CALL:
             // if(first==NULL){
-              // cout<<"\ttre.hpp 165"<<endl;
+              // cout<<"tre.hpp 165"<<endl;
               GLOBALreturned = false;
               if(first!=NULL){
                 for(auto x:first->list()){
                   argslis.push_back(x);
                 }
               }
-              // cout<<"\ttre.hpp 172"<<endl;
-              // cout<<"\tstack added"<<endl;
+              // cout<<"tre.hpp 172"<<endl;
+              // cout<<"stack added"<<endl;
               exec_context.push();
-              // cout<<"\ttre.hpp 175"<<endl;
+              // cout<<"tre.hpp 175"<<endl;
               if(func_table.count(symbol)!=0){
                 vector<string> varnames = func_table[symbol].args_list;
                 
                 if(varnames.size()==argslis.size()){
                   for(int i=0;i<varnames.size();i++){
-                    // cout<<"\tadding arguments"<<endl;
+                    // cout<<"adding arguments"<<endl;
                     exec_context.def(varnames[i],argslis[i]);
                   }
                 }
                 else{
                   cout << "Error: Function " << symbol << " takes " << varnames.size() << " arguments, but " << argslis.size() << " were given." << endl;
                 }
-                // cout<<"\tcalling "<<symbol<<"with arguments :"<<endl;
+                // cout<<"calling "<<symbol<<"with arguments :"<<endl;
                 // for(auto x: argslis){
                 //   cout<<x<<" ";
                 // }
-                // cout<<"\tstacksize "<<exec_context.ec.size()<<endl;
+                // cout<<"stacksize "<<exec_context.ec.size()<<endl;
                 // cout<<endl;
                 ((treenode*) func_table[symbol].func_def_tree)->execute();
               }
               exec_context.pop();
               if(GLOBALreturned){
-                // cout<<"\tstack removed with value "<<GLOBALretval<<endl;
+                // cout<<"stack removed with value "<<GLOBALretval<<endl;
                 GLOBALreturned = false;
                 return GLOBALretval;
               }
               else{
-                // cout<<"\tstack removed"<<endl;
+                // cout<<"stack removed"<<endl;
                 return 0;
               }
             // }
@@ -327,7 +320,7 @@ class treenode{
           case NODE_FUNC:
             // symbol, first is args, second is body
             func_table[symbol].func_def_tree = second;
-            // cout<<"\ttre.hpp 192"<<endl;
+            // cout<<"tre.hpp 192"<<endl;
             if(first!=NULL)
             func_table[symbol].args_list = first->plist();
             else func_table[symbol].args_list = vector<string> ();
@@ -338,156 +331,6 @@ class treenode{
               second->execute();
             }
             break;
-        }
-      }
-
-      int compile(){
-        vector<double> argslis;
-        double inpstr;
-        string templ,templ2;
-        switch(type){
-          case NODE_STATEMENTS:
-            first->compile();
-            if(second!=NULL)
-              second->compile();
-            break;
-          case NODE_ASSIGN:
-            first->compile();
-            if(decl.count(symbol)==0){
-              cout<<"using undeclared symbol"<<endl;
-              exit(0);
-            }
-            cout<< "\tpop " << symbol << endl;
-            break;
-          case NODE_DECLARE:
-              cout<<"\tdecl "<<symbol<<endl;
-              decl.insert(symbol);
-            break; 
-          case NODE_EXPR:
-            first->compile();
-            break;
-          case NODE_PRINT:
-          // cout<<"\tprinting"<<endl;
-          if(first!=NULL){
-            first->compile();
-            cout<<"\tprint"<<endl;
-          }
-          else {
-            if(symbol.size()!=2)
-              cout << "\tprint \"" <<symbol.substr(1,symbol.length()-2)<<"\""<<endl; 
-            else
-              cout<< "\tprint \\n"<<endl;
-          }
-            break;
-          case NODE_OPER:
-            first->compile();
-            third->compile();
-            if(second->symbol=="+"){
-              cout<<"\tadd"<<endl;
-            }
-            else if (second->symbol=="-"){
-              cout<<"\tsub"<<endl;
-            }
-            else if(second->symbol=="*"){
-              cout<<"\tmul"<<endl;
-            }
-            else if (second->symbol=="/"){
-              cout<<"\tdiv"<<endl;
-            }
-            else if (second->symbol=="%"){
-              cout<<"\tmod"<<endl;
-            }
-            break;
-          case NODE_COMP:
-            first->compile();
-            third->compile();
-            if(second->symbol=="=="){
-              cout<< "\teq"<<endl;
-            }
-            else if (second->symbol=="!="){
-              cout<< "\tneq"<<endl;
-            }
-            else if(second->symbol=="<"){
-              cout<< "\tlt"<<endl;
-            }
-            else if (second->symbol==">"){
-              cout<< "\tgt"<<endl;
-            }
-            else if(second->symbol=="<="){
-              cout<< "\tleq"<<endl;
-            }
-            else if (second->symbol==">="){
-              cout<< "\tgeq"<<endl;
-            }
-            break;
-          case NODE_ID:
-            if(decl.count(symbol)==0){
-              cout<<"using undeclared symbol"<<endl;
-              exit(0);
-            }
-            cout<<"\tpush " << symbol << endl;
-            break;
-          case NODE_VAL:
-            cout<< "\tpush " << value << endl;
-            break;
-          case NODE_IF:
-            first->compile();
-            cout<<"\tpush 0"<<endl;
-            templ = getlabel();
-            cout<<"\tjeq "<<templ<<endl;
-            second->compile();
-            cout<<templ<<":"<<endl;
-            break;
-          case NODE_IFELSE:
-            first->compile();
-            cout<<"\tpush 0"<<endl;
-            templ2 = getlabel();
-            templ = getlabel();
-            cout<<"\tjeq "<<templ<<endl;
-            second->compile();
-            cout<<"\tjmp "<<templ2<<endl;
-            cout<<templ<<":"<<endl;
-            third->compile();
-            cout<<templ2<<":"<<endl;
-            // //!
-            // if(condition) statement1  else label1 statement2 label2
-
-            // //! compilation of above line
-            // translation of condition
-            // jump to label1 if condition false
-            // translation of statement 1
-            // jump to after label2
-            // this is label1
-            // translation of statement 2
-            // this is label2
-
-            break;
-          case NODE_FOR:
-            first->compile();
-            templ = getlabel();
-            templ2 = getlabel();
-            cout<<templ<<":"<<endl;
-            second->compile();
-            cout<<"\tpush 0"<<endl;
-            cout<<"\tjeq "<<templ2<<endl;
-            fourth->compile();
-            third->compile();
-            cout<<"\tjmp "<<templ<<endl;
-            cout<<templ2<<":"<<endl;
-            break;
-            // //! for
-            // for(st1;st2;st3){
-            //   stmts;
-            // }
-            // //! compilation of above
-            // translation of st1
-            // lable1
-            // translation of st2
-            // jump to label2 if false;
-            // translation of stmts
-            // translation of st3
-            // jump to label 1
-            // label2
         }
       }
     };
