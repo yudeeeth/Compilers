@@ -83,7 +83,7 @@ s, yychar, yylineno);}
 
 %%
 program : statements { treenode * toplevel = new treenode(NODE_STATEMENTS,$1);
-                    toplevel->compile(unordered_set<string>());
+                    toplevel->compile();
                     // cout<<"interpreter starts from here:"<<endl;
                     // toplevel->execute();
                     };

@@ -49,6 +49,7 @@ class treenode{
       int type;
       double value;
       string symbol;
+
       treenode(int code, treenode * _first=NULL, treenode* _second =NULL, treenode * _third=NULL, treenode* _fourth=NULL){
           type = code;
           first = _first;
@@ -341,35 +342,63 @@ class treenode{
         }
       }
 
-      int compile(){
-        vector<double> argslis;
+      void printins(string ins, string var = ""){
+        if(var != ""){
+          cout<<"\t"<<ins<<" "<<var<<endl;
+        }
+        else{
+          cout<<"\t"<<ins<<endl;
+        }
+      }
+      
+      string getrandomsuffix(){
+        string k(10,'_');
+        for(int i=1;i<10;i++){
+          k[i] = rand()%26 + 'a';
+        }
+        return k;
+      }
+
+      string addsuffix(string var, string suffix, unordered_set<string> &s){
+        if(s.count(var)==0){
+          return var;
+        }
+        else return var+suffix;
+      }
+
+      int compile(unordered_set<string> varset = {}, string prevsuffix=""){
+        vector<string> argslis;
         double inpstr;
         string templ,templ2;
+        unordered_set<string> current_set(varset.begin(),varset.end());
+        unordered_set<string> child_set;
+        string child_suffix;
+        string suffix = prevsuffix;
         switch(type){
           case NODE_STATEMENTS:
-            first->compile();
+            first->compile(current_set,suffix);
             if(second!=NULL)
-              second->compile();
+              second->compile(current_set,suffix);
             break;
           case NODE_ASSIGN:
-            first->compile();
+            first->compile(current_set,suffix);
             if(decl.count(symbol)==0){
               cout<<"using undeclared symbol"<<endl;
               exit(0);
             }
-            cout<< "\tpop " << symbol << endl;
+            printins("pop",addsuffix(symbol,suffix,current_set));
             break;
           case NODE_DECLARE:
-              cout<<"\tdecl "<<symbol<<endl;
+              printins("decl",addsuffix(symbol,suffix,current_set));
               decl.insert(symbol);
             break; 
           case NODE_EXPR:
-            first->compile();
+            first->compile(current_set,suffix);
             break;
           case NODE_PRINT:
           // cout<<"\tprinting"<<endl;
           if(first!=NULL){
-            first->compile();
+            first->compile(current_set,suffix);
             cout<<"\tprint"<<endl;
           }
           else {
@@ -380,8 +409,8 @@ class treenode{
           }
             break;
           case NODE_OPER:
-            first->compile();
-            third->compile();
+            first->compile(current_set,suffix);
+            third->compile(current_set,suffix);
             if(second->symbol=="+"){
               cout<<"\tadd"<<endl;
             }
@@ -398,9 +427,13 @@ class treenode{
               cout<<"\tmod"<<endl;
             }
             break;
+          case NODE_RETURN: 
+            first->compile(current_set,suffix);
+            printins("ret");
+            break;
           case NODE_COMP:
-            first->compile();
-            third->compile();
+            first->compile(current_set,suffix);
+            third->compile(current_set,suffix);
             if(second->symbol=="=="){
               cout<< "\teq"<<endl;
             }
@@ -421,33 +454,55 @@ class treenode{
             }
             break;
           case NODE_ID:
-            if(decl.count(symbol)==0){
+            if(decl.count(addsuffix(symbol,suffix,current_set))==0){
               cout<<"using undeclared symbol"<<endl;
               exit(0);
             }
-            cout<<"\tpush " << symbol << endl;
+            printins("push",addsuffix(symbol,suffix,current_set));
+            // cout<<"\tpush " << symbol << endl;
+            break;
+          case NODE_FUNC:
+            templ = getlabel();
+            child_suffix = getrandomsuffix();
+            printins("jmp",templ);
+            cout<<symbol<<":"<<endl;
+              if(first!=NULL){
+                argslis = first->plist();
+                for(auto x: argslis){
+                  child_set.insert(x);
+                  decl.insert(addsuffix(x,child_suffix,child_set));
+                  printins("pop",addsuffix(x,child_suffix,child_set));
+                }
+              }
+              second->compile(child_set,child_suffix);
+            cout<<templ<<":"<<endl;
+            break;
+          case NODE_CALL:
+              first->compile(current_set,suffix);
+              printins("call",symbol);
             break;
           case NODE_VAL:
-            cout<< "\tpush " << value << endl;
+            // cout<< "\tpush " << value << endl;
+            printins("push",addsuffix(to_string(value),suffix,current_set));
             break;
           case NODE_IF:
-            first->compile();
+            first->compile(current_set,suffix);
             cout<<"\tpush 0"<<endl;
             templ = getlabel();
             cout<<"\tjeq "<<templ<<endl;
-            second->compile();
+            second->compile(current_set,suffix);
             cout<<templ<<":"<<endl;
             break;
           case NODE_IFELSE:
-            first->compile();
+            first->compile(current_set,suffix);
             cout<<"\tpush 0"<<endl;
             templ2 = getlabel();
             templ = getlabel();
             cout<<"\tjeq "<<templ<<endl;
-            second->compile();
+            second->compile(current_set,suffix);
             cout<<"\tjmp "<<templ2<<endl;
             cout<<templ<<":"<<endl;
-            third->compile();
+            third->compile(current_set,suffix);
             cout<<templ2<<":"<<endl;
             // //!
             // if(condition) statement1  else label1 statement2 label2
@@ -463,17 +518,23 @@ class treenode{
 
             break;
           case NODE_FOR:
-            first->compile();
+            first->compile(current_set,suffix);
             templ = getlabel();
             templ2 = getlabel();
             cout<<templ<<":"<<endl;
-            second->compile();
+            second->compile(current_set,suffix);
             cout<<"\tpush 0"<<endl;
             cout<<"\tjeq "<<templ2<<endl;
-            fourth->compile();
-            third->compile();
+            fourth->compile(current_set,suffix);
+            third->compile(current_set,suffix);
             cout<<"\tjmp "<<templ<<endl;
             cout<<templ2<<":"<<endl;
+            break;
+          case NODE_ARGS:
+            first->compile(current_set,suffix);
+            if(second!=NULL){
+              second->compile(current_set,suffix);
+            }
             break;
             // //! for
             // for(st1;st2;st3){

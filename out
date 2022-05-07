@@ -1,0 +1,91 @@
+┌─────────┬─────────┬─────────────────────┐
+│ (index) │    0    │          1          │
+├─────────┼─────────┼─────────────────────┤
+│    0    │ 'decl'  │      'KANNA_n'      │
+│    1    │ 'push'  │     '5.000000'      │
+│    2    │ 'push'  │     '5.000000'      │
+│    3    │  'add'  │                     │
+│    4    │  'pop'  │      'KANNA_n'      │
+│    5    │ 'push'  │      'KANNA_n'      │
+│    6    │ 'push'  │     '1.000000'      │
+│    7    │  'eq'   │                     │
+│    8    │ 'push'  │         '0'         │
+│    9    │  'jeq'  │      'label2'       │
+│   10    │ 'push'  │      'KANNA_n'      │
+│   11    │ 'print' │                     │
+│   12    │  'jmp'  │      'label1'       │
+│   13    │ 'push'  │      'KANNA_n'      │
+│   14    │ 'push'  │     '1.000000'      │
+│   15    │  'add'  │                     │
+│   16    │ 'print' │                     │
+│   17    │ 'push'  │     '0.000000'      │
+│   18    │  'pop'  │      'KANNA_n'      │
+│   19    │ 'push'  │     '0.000000'      │
+│   20    │  'pop'  │      'KANNA_n'      │
+│   21    │ 'push'  │      'KANNA_n'      │
+│   22    │ 'push'  │     '5.000000'      │
+│   23    │  'lt'   │                     │
+│   24    │ 'push'  │         '0'         │
+│   25    │  'jeq'  │      'label4'       │
+│   26    │ 'push'  │      'KANNA_n'      │
+│   27    │ 'print' │                     │
+│   28    │ 'print' │        '" "'        │
+│   29    │ 'push'  │      'KANNA_n'      │
+│   30    │ 'push'  │     '1.000000'      │
+│   31    │  'add'  │                     │
+│   32    │  'pop'  │      'KANNA_n'      │
+│   33    │  'jmp'  │      'label3'       │
+│   34    │  'jmp'  │      'label5'       │
+│   35    │  'pop'  │ 'KANNA_a_nwlrbbmqb' │
+│   36    │  'pop'  │ 'KANNA_b_nwlrbbmqb' │
+│   37    │ 'push'  │ 'KANNA_a_nwlrbbmqb' │
+│   38    │ 'push'  │ 'KANNA_b_nwlrbbmqb' │
+│   39    │  'add'  │                     │
+│   40    │  'ret'  │                     │
+│   41    │ 'push'  │     '3.000000'      │
+│   42    │ 'push'  │     '5.000000'      │
+│   43    │ 'call'  │     'KANNA_add'     │
+│   44    │  'jmp'  │      'label6'       │
+│   45    │  'pop'  │ 'KANNA_n_hcdarzowk' │
+│   46    │ 'push'  │ 'KANNA_n_hcdarzowk' │
+│   47    │ 'push'  │     '1.000000'      │
+│   48    │  'sub'  │                     │
+│   49    │ 'call'  │    'KANNA_fact'     │
+│   50    │ 'push'  │ 'KANNA_n_hcdarzowk' │
+│   51    │  'mul'  │                     │
+│   52    │  'ret'  │                     │
+│   53    │  'jmp'  │      'label7'       │
+│   54    │  'pop'  │ 'KANNA_n_kyhiddqsc' │
+│   55    │ 'push'  │ 'KANNA_n_kyhiddqsc' │
+│   56    │ 'push'  │     '2.000000'      │
+│   57    │  'lt'   │                     │
+│   58    │ 'push'  │         '0'         │
+│   59    │  'jeq'  │      'label8'       │
+│   60    │ 'push'  │     '0.000000'      │
+│   61    │ 'push'  │ 'KANNA_n_kyhiddqsc' │
+│   62    │ 'push'  │     '1.000000'      │
+│   63    │  'sub'  │                     │
+│   64    │ 'call'  │     'KANNA_fib'     │
+│   65    │ 'push'  │ 'KANNA_n_kyhiddqsc' │
+│   66    │ 'push'  │     '2.000000'      │
+│   67    │  'sub'  │                     │
+│   68    │ 'call'  │     'KANNA_fib'     │
+│   69    │  'add'  │                     │
+│   70    │  'ret'  │                     │
+└─────────┴─────────┴─────────────────────┘
+┌────────────┬────────┐
+│  (index)   │ Values │
+├────────────┼────────┤
+│   label2   │   13   │
+│   label1   │   17   │
+│   label3   │   21   │
+│   label4   │   34   │
+│ KANNA_add  │   35   │
+│   label5   │   41   │
+│ KANNA_fact │   45   │
+│   label6   │   53   │
+│ KANNA_fib  │   54   │
+│   label8   │   61   │
+│   label7   │   71   │
+└────────────┴────────┘
+110 1 2 3 4 
