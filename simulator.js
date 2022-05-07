@@ -1,3 +1,4 @@
+let DEBUG = false;
 let fs = require('fs');
 const { parse } = require('url');
 let instructions = [];
@@ -8,6 +9,11 @@ let instructions = [];
         instructions.push(line);
     });
 })('out.md');
+
+const debug = (...args) => {
+    if(DEBUG)
+    console.log(...args);
+}
 
 const print = (args)=>{
     if(typeof args === 'number'){
@@ -40,7 +46,8 @@ instructions = instructions.slice(0,left);
 // simulate
 let stack = [];
 let mem = {};
-let frame_pointer = 0;
+let fp = 0;
+let retaddr = 0;
 for(let ins =0;ins<instructions.length;ins++){
     let op = instructions[ins][0];
     let arg = instructions[ins][1];
@@ -52,12 +59,20 @@ for(let ins =0;ins<instructions.length;ins++){
         case "decl": mem[arg] =  0;
             break;
         case "push": 
-            if(arg[0]=="K")
+            if(arg=="ST"){
+                a = stack.pop();
+                stack.push(stack[a]);
+            }
+            else if(arg=="xFP"){
+                stack.push(fp);
+            }
+            else if(arg[0]=="K")
                 stack.push(mem[arg]);
             else 
                 stack.push(parseFloat(arg));
             break;
-        case "pop" : mem[arg] = stack.pop();
+        case "pop" : 
+                    mem[arg] = stack.pop();
             break;
         case "print": 
                     if(instructions[ins].length==1)
@@ -130,8 +145,37 @@ for(let ins =0;ins<instructions.length;ins++){
                     }
                     break;
         case "call": 
+                    // stack already has params, first thing to push is frame pointer
+                    debug("stack size before call with args only->",stack.length);
+                    stack.push(fp);
+                    debug("pushing fp->",fp);
+                    // set new fp
+                    fp = stack.length - 1;
+                    debug("new fp->",fp);
+                    // push return address
+                    stack.push(parseInt(ins)+1);
+                    debug("return address->",ins+1);
+                    ins = parseInt(labelmap[arg])-1;
+                    debug("jump to/call->",ins);
+                    // console.log(...stack);
                     break;
         case "ret" : 
+                    let retval = parseInt(stack.pop());
+                    debug("retval is->",retval);
+                    retaddr = stack[fp+1];
+                    debug("retaddr while returning->",retaddr);
+                    let remfromstack = stack[fp+2];
+                    debug("remove from stack->",remfromstack);
+                    let oldfp = fp;
+                    // remove excess shit on stack
+                    fp = stack[fp];
+                    debug("resetting fp->",fp);
+                    stack = stack.slice(0,oldfp-remfromstack);
+                    debug("remove from stack till->",oldfp-remfromstack+1)
+                    ins = retaddr -1;
+                    debug("stack size after returning w/o args->",stack.length);
+                    stack.push(retval);
+                    
                     break;
         
     }
