@@ -5,9 +5,10 @@
     #include <unordered_map>
 
     extern int yylex();
+    extern bool mode;
     extern int yylineno, yychar;
     void yyerror(const char *s) { fprintf(stderr,
-"%s: token %d on line %d\n",
+"%s: token %d near line %d\n",
 s, yychar, yylineno);}
 %}
 
@@ -83,7 +84,10 @@ s, yychar, yylineno);}
 
 %%
 program : statements { treenode * toplevel = new treenode(NODE_STATEMENTS,$1);
-                    toplevel->compile();
+                    if(mode)
+                      toplevel->compile();
+                    else
+                      toplevel->execute();
                     // cout<<"interpreter starts from here:"<<endl;
                     // toplevel->execute();
                     };

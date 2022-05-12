@@ -4,3 +4,6 @@ inp
 main
 parser.hpp
 savecode
+.timetracker
+.vscode
+legacy/*

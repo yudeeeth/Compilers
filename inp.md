@@ -1,9 +1,22 @@
 KANNA_fib(KANNA_n){
-  ORUVELA (KANNA_n < 2){
+  ORUVELA (KANNA_n == 0){
+    ITHU EPDI IRUKU 0:
+  }
+  ORUVELA (KANNA_n == 1){
     ITHU EPDI IRUKU 1:
   }
   ITHU EPDI IRUKU KANNA_fib(KANNA_n-1) + KANNA_fib(KANNA_n-2):
 }
 
-VECHUKO(KANNA_fib(5)):
+VECHUKO("Printing Fibonacci sequence from 0 to 20..."):
+VECHUKO(""):
+
+KANNA_n:
+
+NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 20:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
+  VECHUKO(KANNA_fib(KANNA_n)):
+  VECHUKO(" "):
+}
+
+VECHUKO(""):
 

@@ -12,7 +12,8 @@ extern "C" int yywrap() { return 1;}
 
 %%
 
-[\t \n]                    ;
+[\t ]                    ;
+\n {yylineno++;}      ;
 ":"  {return SLASHN;}
 "//".*\n               ;
 "ORUVELA" { return IF;}

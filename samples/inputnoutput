@@ -1,8 +1,0 @@
-x;
-IN(x);
-PRINT("hello, you've entered x = ");
-PRINT(x);
-// works as endl
-PRINT("");
-PRINT("Surprise bro");
-PRINT("");

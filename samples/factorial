@@ -1,7 +1,0 @@
-fact(n){
-    IF(n==0){
-        RETURN 1;
-    }
-    RETURN n*fact(n-1);
-}
-PRINT(fact(5));
