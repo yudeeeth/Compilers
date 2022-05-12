@@ -291,38 +291,27 @@ class treenode{
             return value;
             break;
           case NODE_CALL:
-            // if(first==NULL){
-              // cout<<"\ttre.hpp 165"<<endl;
               GLOBALreturned = false;
+              //! getting list of args passed when calling
               if(first!=NULL){
                 for(auto x:first->list()){
                   argslis.push_back(x);
                 }
               }
-              // cout<<"\ttre.hpp 172"<<endl;
-              // cout<<"\tstack added"<<endl;
+              //! adding new scope
               exec_context.push();
-              // cout<<"\ttre.hpp 175"<<endl;
+              //! adding and initialising the arguments in this scope
               if(func_table.count(symbol)!=0){
                 vector<string> varnames = func_table[symbol].args_list;
-                
                 if(varnames.size()==argslis.size()){
                   for(int i=0;i<varnames.size();i++){
-                    // cout<<"\tadding arguments"<<endl;
                     exec_context.def(varnames[i],argslis[i]);
                   }
                 }
-                else{
-                  cout << "Error: Function " << symbol << " takes " << varnames.size() << " arguments, but " << argslis.size() << " were given." << endl;
-                }
-                // cout<<"\tcalling "<<symbol<<"with arguments :"<<endl;
-                // for(auto x: argslis){
-                //   cout<<x<<" ";
-                // }
-                // cout<<"\tstacksize "<<exec_context.ec.size()<<endl;
-                // cout<<endl;
+                //! calling the function node from table
                 ((treenode*) func_table[symbol].func_def_tree)->execute();
               }
+              //! removing new scope
               exec_context.pop();
               if(GLOBALreturned){
                 // cout<<"\tstack removed with value "<<GLOBALretval<<endl;

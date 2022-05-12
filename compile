@@ -1,6 +1,3 @@
-make clean
-make
-clear
 printf "Compiled code into out.md, the below is the interpreted output:\n"
 printf "To run the assembly code in the simulator, run ./run\n"
 ./main inp.md false

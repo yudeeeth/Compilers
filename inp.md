@@ -1,3 +1,36 @@
+VECHUKO("Eval block:"):
+VECHUKO(""):
+
+KANNA_n:
+KANNA_m:
+(5+5)*3 SOLRAN KANNA_n SEIRAN:
+9+KANNA_n SOLRAN KANNA_m SEIRAN:
+
+VECHUKO("Kanna_n: "):
+VECHUKO(KANNA_n):
+VECHUKO(""):
+VECHUKO("KANNA_m: "):
+VECHUKO(KANNA_m):
+VECHUKO(""):
+
+VECHUKO("Jump block:"):
+VECHUKO(""):
+ORUVELA ((KANNA_n - 10) < 0) {
+    VECHUKO("kanna_n < 10"):
+}
+ILLENA {
+    VECHUKO("Kanna_n > 10"):
+}
+
+VECHUKO(""):
+NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 5:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
+  VECHUKO(KANNA_n):
+  VECHUKO(" "):
+}
+
+VECHUKO("Function block:"):
+VECHUKO(""):
+
 KANNA_fib(KANNA_n){
   ORUVELA (KANNA_n == 0){
     ITHU EPDI IRUKU 0:
@@ -19,4 +52,3 @@ NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 20:) VAATI SONNA MAARI (KAN
 }
 
 VECHUKO(""):
-

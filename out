@@ -1,0 +1,202 @@
+******************************************
+Input:
+******************************************
+VECHUKO("Eval block:"):
+VECHUKO(""):
+
+KANNA_n:
+KANNA_m:
+(5+5)*3 SOLRAN KANNA_n SEIRAN:
+9+KANNA_n SOLRAN KANNA_m SEIRAN:
+
+VECHUKO("Kanna_n: "):
+VECHUKO(KANNA_n):
+VECHUKO(""):
+VECHUKO("KANNA_m: "):
+VECHUKO(KANNA_m):
+VECHUKO(""):
+
+VECHUKO("Jump block:"):
+VECHUKO(""):
+ORUVELA ((KANNA_n - 10) < 0) {
+    VECHUKO("kanna_n < 10"):
+}
+ILLENA {
+    VECHUKO("Kanna_n > 10"):
+}
+
+VECHUKO(""):
+NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 5:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
+  VECHUKO(KANNA_n):
+  VECHUKO(" "):
+}
+
+VECHUKO("Function block:"):
+VECHUKO(""):
+
+KANNA_fib(KANNA_n){
+  ORUVELA (KANNA_n == 0){
+    ITHU EPDI IRUKU 0:
+  }
+  ORUVELA (KANNA_n == 1){
+    ITHU EPDI IRUKU 1:
+  }
+  ITHU EPDI IRUKU KANNA_fib(KANNA_n-1) + KANNA_fib(KANNA_n-2):
+}
+
+VECHUKO("Printing Fibonacci sequence from 0 to 20..."):
+VECHUKO(""):
+
+KANNA_n:
+
+NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 20:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
+  VECHUKO(KANNA_fib(KANNA_n)):
+  VECHUKO(" "):
+}
+
+VECHUKO(""):
+******************************************
+Compiler output:
+******************************************
+	print "Eval block:"
+	print ""
+	decl KANNA_n
+	decl KANNA_m
+	push 5.000000
+	push 5.000000
+	add
+	push 3.000000
+	mul
+	pop KANNA_n
+	push 9.000000
+	push KANNA_n
+	add
+	pop KANNA_m
+	print "Kanna_n: "
+	push KANNA_n
+	print
+	print ""
+	print "KANNA_m: "
+	push KANNA_m
+	print
+	print ""
+	print "Jump block:"
+	print ""
+	push KANNA_n
+	push 10.000000
+	sub
+	push 0.000000
+	lt
+	push 0
+	jeq label2
+	print "kanna_n < 10"
+	jmp label1
+label2:
+	print "Kanna_n > 10"
+label1:
+	print ""
+	push 0.000000
+	pop KANNA_n
+label3:
+	push KANNA_n
+	push 5.000000
+	lt
+	push 0
+	jeq label4
+	push KANNA_n
+	print
+	print " "
+	push KANNA_n
+	push 1.000000
+	add
+	pop KANNA_n
+	jmp label3
+label4:
+	print "Function block:"
+	print ""
+	jmp label5
+KANNA_fib:
+	push 1
+	push xFP
+	push -1
+	add
+	push ST
+	push 0.000000
+	eq
+	push 0
+	jeq label6
+	push 0.000000
+	ret
+label6:
+	push xFP
+	push -1
+	add
+	push ST
+	push 1.000000
+	eq
+	push 0
+	jeq label7
+	push 1.000000
+	ret
+label7:
+	push xFP
+	push -1
+	add
+	push ST
+	push 1.000000
+	sub
+	call KANNA_fib
+	push xFP
+	push -1
+	add
+	push ST
+	push 2.000000
+	sub
+	call KANNA_fib
+	add
+	ret
+label5:
+	print "Printing Fibonacci sequence from 0 to 20..."
+	print ""
+	decl KANNA_n
+	push 0.000000
+	pop KANNA_n
+label8:
+	push KANNA_n
+	push 20.000000
+	lt
+	push 0
+	jeq label9
+	push KANNA_n
+	call KANNA_fib
+	print
+	print " "
+	push KANNA_n
+	push 1.000000
+	add
+	pop KANNA_n
+	jmp label8
+label9:
+	print ""
+******************************************
+Interpreter output:
+******************************************
+Eval block:
+Kanna_n: 30
+KANNA_m: 39
+Jump block:
+Kanna_n > 10
+0 1 2 3 4 Function block:
+Printing Fibonacci sequence from 0 to 20...
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 
+******************************************
+Simulator output:
+******************************************
+Eval block:
+Kanna_n: 30
+KANNA_m: 39
+Jump block:
+Kanna_n > 10
+0 1 2 3 4 Function block:
+Printing Fibonacci sequence from 0 to 20...
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 
