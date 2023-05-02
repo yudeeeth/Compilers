@@ -97,7 +97,7 @@ statements : statement statements {$$ = new treenode(NODE_STATEMENTS,$1,$2);}
 statement : ID SLASHN { $$ = new treenode(NODE_DECLARE, *($1)); }
           | ID SLPAREN expression SRPAREN SLASHN { $$ = new treenode(NODE_DECLARE, *($1), $3); }
           | expression SOLRAN ID SEIRAN SLASHN   { $$ = new treenode(NODE_ASSIGN,*($3),$1); }
-          | ID SLPAREN expression SRPAREN ASSIGN expression SLASHN { $$ = new treenode(NODE_ASSIGN,*($1),$6,$3); }
+          | expression SOLRAN ID SLPAREN expression SRPAREN SEIRAN SLASHN { $$ = new treenode(NODE_ASSIGN,*($3),$1,$5); }
           | expression SLASHN { $$ = new treenode(NODE_EXPR,$1); }
           | IF LPAREN expression RPAREN CLPAREN statements CRPAREN ELSE CLPAREN statements CRPAREN { 
             $$ = new treenode(NODE_IFELSE,$3,$6,$10);
@@ -151,6 +151,12 @@ statement : ID SLASHN { $$ = new treenode(NODE_DECLARE, *($1)); }
           | CONTINUE SLASHN {
             $$ = new treenode(NODE_CONTINUE);
           }
+          | ID SLPAREN SRPAREN LPAREN expression RPAREN SLASHN {
+            $$ = new treenode(NODE_DECLARE,*($1),$5);
+          } 
+          | ID SLPAREN SRPAREN SLPAREN args SRPAREN SLASHN {
+            $$ = new treenode(NODE_ARR,*($1),$5);
+          } 
           ;
 args      : expression COMMA args {
             $$ = new treenode(NODE_ARGS,$1,$3);

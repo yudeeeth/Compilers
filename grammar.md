@@ -9,10 +9,12 @@ statement  ->   VECHUKO ( ID ) : // printing
               | NA statement VAATI SONNA statement VAATI SONNA MAARI statement { statements } // for loop
               | ID ( params ) { statements } // function definition
               | ITHU EPIDI IRUKU ID : // return statement
+              | ID [] ( expr ) :
               ;
 expr       ->   expr operator expr
               | expr comp expr
               | ( expr ) 
               | ID // variable
               | ID ( args ) // function call
+              | ID [ expr ] // array
               ;

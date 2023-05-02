@@ -19,6 +19,7 @@ const print = (args)=>{
     if(typeof args === 'number'){
         args = args.toString();
     }
+    if(args!==undefined)
     process.stdout.write(args);
 }
 
@@ -48,6 +49,8 @@ let stack = [];
 let mem = {};
 let fp = 0;
 let retaddr = 0;
+let sparr = -1;
+// console.log("started")
 for(let ins =0;ins<instructions.length;ins++){
     let op = instructions[ins][0];
     let arg = instructions[ins][1];
@@ -55,8 +58,23 @@ for(let ins =0;ins<instructions.length;ins++){
     // print("stack -> ",...stack);
     // print(instructions[ins]);
     let a,b;
+    // console.log(...stack);
+    // console.log(mem);
     switch(op){
-        case "decl": mem[arg] =  0;
+        case "decl": 
+            if(sparr === -1)
+                mem[arg] =  0;
+            else {
+                let temp = [];
+                for(let i=0;i<sparr;i++){
+                    temp.push(0);
+                }
+                mem[arg] = temp;
+            }
+            sparr = -1;
+            break;
+        case "arr": 
+            sparr = stack.pop();
             break;
         case "push": 
             if(arg=="ST"){
@@ -66,13 +84,24 @@ for(let ins =0;ins<instructions.length;ins++){
             else if(arg=="xFP"){
                 stack.push(fp);
             }
-            else if(arg[0]=="K")
-                stack.push(mem[arg]);
+            else if(arg[0]=="K") {
+                if(sparr === -1)
+                    stack.push(mem[arg]);
+                else {
+                    stack.push(mem[arg][sparr]);
+                    sparr = -1;
+                }
+            }
             else 
                 stack.push(parseFloat(arg));
             break;
         case "pop" : 
-                    mem[arg] = stack.pop();
+                    if(sparr === -1)
+                        mem[arg] = stack.pop();
+                    else {
+                        mem[arg][sparr] = stack.pop();
+                        sparr = -1;
+                    }
             break;
         case "print": 
                     if(instructions[ins].length==1)

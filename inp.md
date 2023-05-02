@@ -1,54 +1,44 @@
-VECHUKO("Eval block:"):
-VECHUKO(""):
-
+KANNA_arr[] [10,9,8,7,6,5,4,3,2,1]:
 KANNA_n:
-KANNA_m:
-(5+5)*3 SOLRAN KANNA_n SEIRAN:
-9+KANNA_n SOLRAN KANNA_m SEIRAN:
-
-VECHUKO("Kanna_n: "):
-VECHUKO(KANNA_n):
-VECHUKO(""):
-VECHUKO("KANNA_m: "):
-VECHUKO(KANNA_m):
-VECHUKO(""):
-
-VECHUKO("Jump block:"):
-VECHUKO(""):
-ORUVELA ((KANNA_n - 10) < 0) {
-    VECHUKO("kanna_n < 10"):
-}
-ILLENA {
-    VECHUKO("Kanna_n > 10"):
-}
-
-VECHUKO(""):
-NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 5:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
-  VECHUKO(KANNA_n):
-  VECHUKO(" "):
-}
-
-VECHUKO("Function block:"):
-VECHUKO(""):
-
-KANNA_fib(KANNA_n){
-  ORUVELA (KANNA_n == 0){
+10 SOLRAN KANNA_n SEIRAN:
+KANNA_temp:
+KANNA_i:
+KANNA_j:
+KANNA_swap(KANNA_ii,KANNA_jj){
+    KANNA_arr[KANNA_ii] SOLRAN KANNA_temp SEIRAN:
+    KANNA_arr[KANNA_jj] SOLRAN KANNA_arr[KANNA_ii] SEIRAN:
+    KANNA_temp SOLRAN KANNA_arr[KANNA_jj] SEIRAN:
     ITHU EPDI IRUKU 0:
-  }
-  ORUVELA (KANNA_n == 1){
-    ITHU EPDI IRUKU 1:
-  }
-  ITHU EPDI IRUKU KANNA_fib(KANNA_n-1) + KANNA_fib(KANNA_n-2):
 }
 
-VECHUKO("Printing Fibonacci sequence from 0 to 20..."):
-VECHUKO(""):
+KANNA_bubble(KANNA_void){
+    NA ( 0 SOLRAN KANNA_i SEIRAN: ) VAATI SONNA (  KANNA_i < KANNA_n-1: ) VAATI SONNA MAARI ( KANNA_i+1 SOLRAN KANNA_i SEIRAN: ) {
+        NA ( 0 SOLRAN KANNA_j SEIRAN: ) VAATI SONNA (  KANNA_j < KANNA_n-1: ) VAATI SONNA MAARI ( KANNA_j+1 SOLRAN KANNA_j SEIRAN: ) {
+            ORUVELA (KANNA_arr[KANNA_j+1] < KANNA_arr[KANNA_j]) {
+              KANNA_swap(KANNA_j+1,KANNA_j):
+            }
+        }
+    }   
+    ITHU EPDI IRUKU 0:
+}
 
-KANNA_n:
+KANNA_part(KANNA_low,KANNA_high,KANNA_pi){
+    KANNA_pi:
+    KANNA_arr[KANNA_high] SOLRAN KANNA_pi SEIRAN:
+    KANNA_low -1 SOLRAN KANNA_i SEIRAN:
+    NA ( KANNA_low SOLRAN KANNA_j SEIRAN: ) VAATI SONNA (  KANNA_j < KANNA_high -1: ) VAATI SONNA MAARI ( KANNA_j+1 SOLRAN KANNA_j SEIRAN: ){
+        ORUVELA(KANNA_arr[KANNA_j] < KANNA_pi){
+            KANNA_i+1 SOLRAN KANNA_i SEIRAN:
+            KANNA_swap(KANNA_i,KANNA_j):
+        }
+    }
+    KANNA_swap(KANNA_i+1,KANNA_high):
+    ITHU EPDI IRUKU KANNA_i+1:
+}
 
-NA (0 SOLRAN KANNA_n SEIRAN:) VAATI SONNA (KANNA_n < 20:) VAATI SONNA MAARI (KANNA_n + 1 SOLRAN KANNA_n SEIRAN:) {
-  VECHUKO(KANNA_fib(KANNA_n)):
-  VECHUKO(" "):
+NA ( 0 SOLRAN KANNA_i SEIRAN: ) VAATI SONNA (  KANNA_i < KANNA_n: ) VAATI SONNA MAARI ( KANNA_i+1 SOLRAN KANNA_i SEIRAN: ){
+    VECHUKO(KANNA_arr[KANNA_i]):
+    VECHUKO(" "):
 }
 
 VECHUKO(""):

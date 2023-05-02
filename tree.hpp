@@ -27,6 +27,7 @@
 #define NODE_FOR 3453245
 #define NODE_BREAK 999999
 #define NODE_CONTINUE 999988
+#define NODE_ARR 314254
 
 using namespace std;
 
@@ -216,9 +217,9 @@ class treenode{
             break;
           case NODE_DECLARE:
               if(first==NULL)
-              exec_context.def(symbol,0);
+                exec_context.def(symbol,0);
               else
-              exec_context.def(symbol,0,first->execute());
+                exec_context.def(symbol,0,first->execute());
             break;
           case NODE_EXPR:
             return first->execute();
@@ -298,6 +299,12 @@ class treenode{
                   argslis.push_back(x);
                 }
               }
+              // unordered_set<string> isArr;
+              // for(auto x: first->plist()){
+              //   if(exec_context.vcount(x)!=0){
+              //     isArr.insert(x);
+              //   }
+              // }
               //! adding new scope
               exec_context.push();
               //! adding and initialising the arguments in this scope
@@ -387,11 +394,24 @@ class treenode{
             first->compile(current_set);
             if(decl.count(symbol)==0){
               cout<<"using undeclared symbol"<<endl;
+              cout<<"looking for "<<symbol<<":\n found:"<<endl;
+              for(auto x: decl){
+                cout<<x<<endl;
+              }
               exit(0);
             }
+            if(second != NULL){
+              second->compile(current_set);
+              printins("arr");
+            }
+            // cout<<"bitch"<<endl;
             printins("pop",addsuffix(symbol,current_set));
             break;
           case NODE_DECLARE:
+              if(first!=NULL){
+                first->compile();
+                printins("arr");
+              }
               printins("decl",addsuffix(symbol,current_set));
               decl.insert(symbol);
             break; 
@@ -461,6 +481,10 @@ class treenode{
               cout<<"using undeclared symbol"<<endl;
               exit(0);
             }
+            if(first!=NULL){
+              first->compile(current_set);
+              printins("arr");
+            }
             printins("push",addsuffix(symbol,current_set));
             // cout<<"\tpush " << symbol << endl;
             break;
@@ -473,8 +497,10 @@ class treenode{
             // printins("push","xTOP");
             // return address
             cout<<symbol<<":"<<endl;
+            cout<<"function is called here"<<endl;
             it = 0;
               if(first!=NULL){
+                cout<<"inside first!=NULL"<<endl;
                 argslis = first->plist();
                 it = -argslis.size();
                 for(auto x: argslis){
@@ -491,12 +517,16 @@ class treenode{
                   child_set[x] = it; it++;
                   printins("push",0);
                 }
+                cout<<"after pushing 0s"<<endl;
               }
+              cout<<"exit first!=NULL"<<endl;
               second->compile(child_set);
+            cout<<"before function exit"<<endl;
             cout<<templ<<":"<<endl;
             break;
           case NODE_CALL:
-              first->compile(current_set);
+              if(first!=NULL)
+                first->compile(current_set);
               printins("call",symbol);
             break;
           case NODE_VAL:
@@ -541,6 +571,19 @@ class treenode{
               second->compile(current_set);
             }
             break;
+          case NODE_ARR:
+            first->compile();
+            argslis = first->plist();
+            it = 0;
+            printins("push",to_string(argslis.size()));
+            printins("arr");
+            printins("decl",addsuffix(symbol,current_set));
+            for(it=argslis.size()-1;it>=0;it--){
+              printins("push",to_string(it));
+              printins("arr");
+              printins("pop",addsuffix(symbol,current_set));
+            }
+            decl.insert(symbol);
         }
       }
     };

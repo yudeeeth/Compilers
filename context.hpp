@@ -35,7 +35,7 @@ class get_exec_context{
     ec.back()[str] = val;
   }
   void def(string str, double val, int sz){
-    vec.back()[str] = vector<double>(sz);
+    vec.back()[str] = vector<double>(sz,val);
   }
   void set(string str, double val){
     for(int i=ec.size()-1;i>=0;i--){
@@ -55,7 +55,7 @@ class get_exec_context{
     }
     // ec.back()[str][index] = val;
   }
-  double count(string str){
+  bool count(string str){
     for(int i=ec.size()-1;i>=0;i--){
       if(ec[i].count(str)!=0){
         return true;
@@ -63,7 +63,7 @@ class get_exec_context{
     }
     return false;
   }
-  double vcount(string str){
+  bool vcount(string str){
     for(int i=vec.size()-1;i>=0;i--){
       if(vec[i].count(str)!=0){
         return true;
